@@ -8,9 +8,9 @@ read -p '次の選択肢から入力してください(Add Password/Get Password
 # 以下条件分岐
 # while文('Exit'が入力されるまで)
 
-while [ $task != 'Exit' ]; do
+while [ "$task" != 'Exit' ]; do
     # 入力
-    if [ $task = "Add Password" ]; then
+    if [ "$task" = "Add Password" ]; then
 
         # サービス名を$serviceに代入
         read -p 'サービス名を入力してください:' service
@@ -27,7 +27,7 @@ while [ $task != 'Exit' ]; do
         echo "パスワードの追加は成功しました。"
         read -p '次の選択肢から入力してください(Add Password/Get Password/Exit):' task
     # 出力
-    elif [ $task = "Get Password" ]; then
+    elif [ "$task" = "Get Password" ]; then
         read -p 'サービス名を入力してください' service
         cat password_manager.txt | grep $service
         read -p '次の選択肢から入力してください(Add Password/Get Password/Exit):' task
