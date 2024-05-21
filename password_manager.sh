@@ -2,19 +2,36 @@
 
 echo "パスワードマネージャーへようこそ！"
 
-# サービス名を$serviceに代入
-echo "サービス名を入力してください："
-read service
+# 作業を選択、$taskに代入
+read -p '次の選択肢から入力してください(Add Password/Get Password/Exit):' task
 
-# ユーザー名を$userに代入
-echo "ユーザー名を入力してください："
-read user
+# 以下条件分岐
+# while文('Exit'が入力されるまで)
 
-# パスワードを$passwordに代入
-echo "パスワードを入力してください："
-read password
+while [ $task != 'Exit' ]; do
+    # 入力
+    if [ $task = "Add Password" ]; then
 
-# 入力された情報をpassword_manager.txtに保存
-echo $service:$user:$password >>password_manager.txt
+        # サービス名を$serviceに代入
+        read -p 'サービス名を入力してください:' service
 
-echo "Thank you!"
+        # ユーザー名を$userに代入
+        read -p 'ユーザー名を入力してください:' user
+
+        # パスワードを$passwordに代入
+        read -p 'パスワードを入力してください:' password
+
+        # 入力された情報をpassword_manager.txtに保存
+        echo $service:$user:$password >>password_manager.txt
+
+        echo "パスワードの追加は成功しました。"
+        read -p '次の選択肢から入力してください(Add Password/Get Password/Exit):' task
+    # 出力
+    elif [ $task = "Get Password" ]; then
+        read -p 'サービス名を入力してください' service
+        cat password_manager.txt | grep $service
+        read -p '次の選択肢から入力してください(Add Password/Get Password/Exit):' task
+    fi
+
+done
+echo 'Thank you!'
