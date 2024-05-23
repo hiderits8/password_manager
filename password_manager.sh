@@ -21,14 +21,30 @@ while [ "$task" != 'Exit' ]; do
         # パスワードを$passwordに代入
         read -p 'パスワードを入力してください:' password
 
+        # GnuPG認証
+        gpg --no-symkey-cache password_manager.txt.gpg
+
         # 入力された情報をpassword_manager.txtに保存
         echo $service:$user:$password >>password_manager.txt
+
+        # 既存パスワードファイルを削除
+        rm password_manager.txt.gpg
+
+        # password_manager.txtを暗号化
+        gpg -c --no-symkey-cache password_manager.txt
+
+        # password_manager.txtを消去
+        rm password_manager.txt
 
         echo パスワードの追加は成功しました。
         read -p '次の選択肢から入力してください(Add Password/Get Password/Exit):' task
     # 出力
     elif [ "$task" = "Get Password" ]; then
-        read -p 'サービス名を入力してください' search
+
+        read -p 'サービス名を入力してください:' search
+
+        # GnuPG認証
+        gpg --no-symkey-cache password_manager.txt.gpg
 
         if cat password_manager.txt | cut -d : -f 1 | grep -x $search >/dev/null; then
             service=$(cat password_manager.txt | grep ^$search | cut -d : -f 1)
@@ -37,8 +53,12 @@ while [ "$task" != 'Exit' ]; do
             echo "ユーザー名:$user"
             password=$(cat password_manager.txt | grep ^$search | cut -d : -f 3)
             echo "パスワード:$password"
+
+            rm password_manager.txt
         else
             echo そのサービスは登録されていません。
+
+            rm password_manager.txt
         fi
         read -p '次の選択肢から入力してください(Add Password/Get Password/Exit):' task
 
